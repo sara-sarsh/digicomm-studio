@@ -5,14 +5,14 @@
 > بر اساس کتاب مرجع *مخابرات دیجیتال* (ویرایش پنجم) اثر جان پروکیس و مسعود صالحی  
 > Based on *Digital Communications* (5th Edition) by John G. Proakis & Masoud Salehi.
 
-[![CI](https://github.com/YOUR_USERNAME/digitalcomm/actions/workflows/ci.yml/badge.svg)](https://github.com/YOUR_USERNAME/digitalcomm/actions/workflows/ci.yml)
-[![Deploy to GitHub Pages](https://github.com/YOUR_USERNAME/digitalcomm/actions/workflows/pages.yml/badge.svg)](https://github.com/YOUR_USERNAME/digitalcomm/actions/workflows/pages.yml)
-[![Tests](https://img.shields.io/badge/Tests-63%20passed-brightgreen.svg)](https://github.com/YOUR_USERNAME/digitalcomm)
+[![CI](https://github.com/sara-sarsh/digicomm-studio/actions/workflows/ci.yml/badge.svg)](https://github.com/sara-sarsh/digicomm-studio/actions/workflows/ci.yml)
+[![Deploy to GitHub Pages](https://github.com/sara-sarsh/digicomm-studio/actions/workflows/pages.yml/badge.svg)](https://github.com/sara-sarsh/digicomm-studio/actions/workflows/pages.yml)
+[![Tests](https://img.shields.io/badge/Tests-63%20passed-brightgreen.svg)](https://github.com/sara-sarsh/digicomm-studio)
 [![TypeScript](https://img.shields.io/badge/TypeScript-5.8-blue.svg)](https://www.typescriptlang.org/)
 [![Vite](https://img.shields.io/badge/Vite-6.4-purple.svg)](https://vitejs.dev/)
 [![License: MIT](https://img.shields.io/badge/License-MIT-blue.svg)](https://opensource.org/licenses/MIT)
 
-**Live Demo:** [https://YOUR_USERNAME.github.io/digitalcomm/](https://YOUR_USERNAME.github.io/digitalcomm/)
+**Live Demo:** [https://sara-sarsh.github.io/digicomm-studio/](https://sara-sarsh.github.io/digicomm-studio/)
 
 ---
 
@@ -76,8 +76,8 @@ $$P_b \approx \frac{1}{4} (1 - \mu)^2 (2 + \mu), \quad \mu = \sqrt{\frac{\gamma}
 ### مراحل اجرا
 ```bash
 # ۱. کلون کردن ریپازیتوری
-git clone https://github.com/YOUR_USERNAME/digitalcomm.git
-cd digitalcomm
+git clone https://github.com/sara-sarsh/digicomm-studio.git
+cd digicomm-studio
 
 # ۲. نصب وابستگی‌ها
 npm install

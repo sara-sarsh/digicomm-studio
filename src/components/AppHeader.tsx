@@ -8,8 +8,8 @@ interface AppHeaderProps {
 
 export function AppHeader({
   version,
-  githubUrl = 'https://github.com/YOUR_USERNAME/digicomm-studio',
-  profileUrl = 'https://github.com/YOUR_USERNAME',
+  githubUrl = 'https://github.com/sara-sarsh/digicomm-studio',
+  profileUrl = 'https://github.com/sara-sarsh',
 }: AppHeaderProps) {
   return (
     <header className="app-header" role="banner">

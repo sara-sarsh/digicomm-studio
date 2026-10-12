@@ -7,9 +7,9 @@ interface AppFooterProps {
 }
 
 export function AppFooter({
-  githubUrl  = 'https://github.com/YOUR_USERNAME/digicomm-studio',
-  issuesUrl  = 'https://github.com/YOUR_USERNAME/digicomm-studio/issues',
-  licenseUrl = 'https://github.com/YOUR_USERNAME/digicomm-studio/blob/main/LICENSE',
+  githubUrl  = 'https://github.com/sara-sarsh/digicomm-studio',
+  issuesUrl  = 'https://github.com/sara-sarsh/digicomm-studio/issues',
+  licenseUrl = 'https://github.com/sara-sarsh/digicomm-studio/blob/main/LICENSE',
 }: AppFooterProps) {
   const year = new Date().getFullYear();
 

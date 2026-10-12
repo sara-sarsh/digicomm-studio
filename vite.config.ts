@@ -15,7 +15,7 @@ export default defineConfig(({ mode }) => {
    */
   const base = env.CF_PAGES === '1'
     ? '/'
-    : (env.VITE_BASE ?? '/');
+    : (env.VITE_BASE ?? (mode === 'production' ? '/digicomm-studio/' : '/'));
 
   return {
     plugins: [react()],
