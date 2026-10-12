@@ -13,6 +13,12 @@ export interface SimConfig {
   snrMax: number;      // dB
   snrStep: number;     // dB
   symbolCount: number; // per SNR point
+  simType?: 'awgn' | 'rayleigh' | 'rician' | 'ofdm' | 'coded' | 'mimo';
+  ofdmSubcarriers?: number;    // default 64
+  ofdmCpLength?: number;       // default 16
+  ricianKFactor?: number;      // default 1
+  codingType?: 'none' | 'hamming74' | 'conv12k3';  // default 'none'
+  mimoConfig?: '1x1' | '2x1-alamouti' | '2x2';    // default '1x1'
 }
 
 export interface BerPoint {
@@ -32,6 +38,9 @@ export interface SimResult {
   berCurve: BerPoint[];
   constellation: ConstellationPoint[];
   elapsedMs: number;
+  paprDb?: number;             // for OFDM sims
+  diversityOrder?: number;     // estimated from BER slope
+  codingGainDb?: number;       // at reference BER=1e-4
 }
 
 // Triple-buffer transfer types
