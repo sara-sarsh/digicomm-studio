@@ -1,0 +1,229 @@
+/* src/styles/brand.css — Design tokens & branding */
+:root {
+  /* ── Neutral ramp (OKLCH) ── */
+  --clr-bg:         oklch(10% 0.020 240);   /* deep space */
+  --clr-surface:    oklch(15% 0.025 240);
+  --clr-surface-2:  oklch(18% 0.025 240);
+  --clr-surface-3:  oklch(22% 0.028 240);
+  --clr-border:     oklch(28% 0.030 240);
+  --clr-muted:      oklch(52% 0.038 240);
+  --clr-body:       oklch(87% 0.014 240);
+  --clr-heading:    oklch(96% 0.008 240);
+
+  /* ── Accent: telecom blue ── */
+  --clr-accent:     oklch(72% 0.180 200);
+  --clr-accent-dim: oklch(60% 0.140 200);
+  --clr-accent-bg:  oklch(20% 0.060 210);
+
+  /* ── Star gold (astronomy) ── */
+  --clr-star:       oklch(84% 0.140 80);
+  --clr-star-dim:   oklch(70% 0.110 80);
+
+  /* ── Semantic ── */
+  --clr-success:    oklch(68% 0.180 145);
+  --clr-warning:    oklch(76% 0.160 70);
+  --clr-danger:     oklch(62% 0.220 25);
+  --clr-info:       oklch(70% 0.150 220);
+
+  /* ── Spacing (8px rhythm) ── */
+  --sp-1: 4px;
+  --sp-2: 8px;
+  --sp-3: 12px;
+  --sp-4: 16px;
+  --sp-5: 20px;
+  --sp-6: 24px;
+  --sp-8: 32px;
+  --sp-10: 40px;
+  --sp-12: 48px;
+
+  /* ── Radii ── */
+  --r-sm: 4px;
+  --r-md: 8px;
+  --r-lg: 12px;
+
+  /* ── Elevation ── */
+  --shadow-sm: 0 1px 3px oklch(0% 0 0 / 0.35);
+  --shadow-md: 0 4px 12px oklch(0% 0 0 / 0.45);
+  --shadow-float: 0 8px 24px oklch(0% 0 0 / 0.55);
+
+  /* ── Typography ── */
+  --font-body: 'Inter', system-ui, sans-serif;
+  --font-mono: 'JetBrains Mono', 'Fira Code', 'Cascadia Code', monospace;
+  --font-fa:   'Vazirmatn', 'Tahoma', sans-serif;
+
+  /* ── Transitions ── */
+  --ease: cubic-bezier(0.25, 0.46, 0.45, 0.94);
+  --dur-fast: 120ms;
+  --dur-mid: 200ms;
+}
+
+/* ════════════════════════════════════════
+   Base reset
+════════════════════════════════════════ */
+*, *::before, *::after { box-sizing: border-box; }
+
+html { font-size: 16px; }
+
+body {
+  margin: 0;
+  background: var(--clr-bg);
+  color: var(--clr-body);
+  font-family: var(--font-body);
+  line-height: 1.6;
+  -webkit-font-smoothing: antialiased;
+}
+
+/* ════════════════════════════════════════
+   Header
+════════════════════════════════════════ */
+.app-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: var(--sp-3) var(--sp-6);
+  background: var(--clr-surface);
+  border-bottom: 1px solid var(--clr-border);
+  position: sticky;
+  top: 0;
+  z-index: 100;
+  box-shadow: var(--shadow-sm);
+  gap: var(--sp-4);
+  flex-wrap: wrap;
+}
+
+.header-brand {
+  display: flex;
+  align-items: center;
+  gap: var(--sp-3);
+  min-width: 0;
+}
+
+.brand-icon {
+  font-size: 1.5rem;
+  line-height: 1;
+  flex-shrink: 0;
+}
+
+.brand-text { min-width: 0; }
+
+.brand-title {
+  font-size: 1.05rem;
+  font-weight: 600;
+  color: var(--clr-heading);
+  letter-spacing: -0.015em;
+  margin: 0;
+  line-height: 1.25;
+  white-space: nowrap;
+}
+
+.brand-sub {
+  font-family: var(--font-fa);
+  font-size: 0.72rem;
+  color: var(--clr-muted);
+  margin: 0;
+  direction: rtl;
+  white-space: nowrap;
+}
+
+.header-links {
+  display: flex;
+  align-items: center;
+  gap: var(--sp-4);
+  flex-shrink: 0;
+}
+
+.header-link {
+  display: inline-flex;
+  align-items: center;
+  gap: var(--sp-2);
+  font-size: 0.85rem;
+  color: var(--clr-muted);
+  text-decoration: none;
+  padding: var(--sp-1) var(--sp-2);
+  border-radius: var(--r-sm);
+  transition: color var(--dur-fast) var(--ease),
+              background var(--dur-fast) var(--ease);
+}
+
+.header-link:hover {
+  color: var(--clr-accent);
+  background: var(--clr-accent-bg);
+}
+
+.header-link:focus-visible {
+  outline: 2px solid var(--clr-accent);
+  outline-offset: 2px;
+  color: var(--clr-accent);
+}
+
+/* ════════════════════════════════════════
+   Footer
+════════════════════════════════════════ */
+.app-footer {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: var(--sp-3) var(--sp-6);
+  background: var(--clr-surface);
+  border-top: 1px solid var(--clr-border);
+  font-size: 0.78rem;
+  color: var(--clr-muted);
+  font-family: var(--font-fa);
+  direction: rtl;
+  flex-wrap: wrap;
+  gap: var(--sp-2);
+}
+
+.footer-credit { display: flex; align-items: center; gap: var(--sp-2); }
+
+.footer-link,
+.footer-credit a {
+  color: var(--clr-accent-dim);
+  text-decoration: none;
+  transition: color var(--dur-fast) var(--ease);
+}
+
+.footer-link:hover,
+.footer-credit a:hover { color: var(--clr-accent); }
+
+.footer-link:focus-visible,
+.footer-credit a:focus-visible {
+  outline: 2px solid var(--clr-accent);
+  outline-offset: 2px;
+  border-radius: var(--r-sm);
+}
+
+.footer-sep {
+  opacity: 0.35;
+  margin: 0 var(--sp-1);
+}
+
+.footer-center { display: flex; align-items: center; }
+
+.footer-right { font-variant-numeric: tabular-nums; }
+
+/* ════════════════════════════════════════
+   Utilities
+════════════════════════════════════════ */
+.accent-blue  { color: var(--clr-accent); }
+.accent-star  { color: var(--clr-star); }
+
+/* ════════════════════════════════════════
+   Accessibility
+════════════════════════════════════════ */
+@media (prefers-reduced-motion: reduce) {
+  *, *::before, *::after {
+    transition-duration: 0ms !important;
+    animation-duration: 0ms !important;
+  }
+}
+
+/* ════════════════════════════════════════
+   Responsive
+════════════════════════════════════════ */
+@media (max-width: 600px) {
+  .app-header { padding: var(--sp-3) var(--sp-4); }
+  .brand-sub  { display: none; }
+  .header-link span { display: none; }
+  .app-footer { flex-direction: column; align-items: flex-end; gap: var(--sp-1); }
+}
