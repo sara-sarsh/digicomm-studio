@@ -4,16 +4,23 @@ import { ModulationType, SimConfig } from '../core/types';
 import { useWorkerSimulation } from '../hooks/useWorkerSimulation';
 import { generatePythonCode } from '../export/python-exporter';
 import { ControlPanel } from './ControlPanel';
+import { TheoryPanel } from './TheoryPanel';
 import { BerChart } from './BerChart';
 import { ConstellationDiagram } from './ConstellationDiagram';
 
 export const App: React.FC = () => {
   const [config, setConfig] = useState<SimConfig>({
+    simType: 'awgn',
     modulation: ModulationType.QPSK,
     snrMin: 0,
     snrMax: 10,
     snrStep: 1,
     symbolCount: 50000,
+    ofdmSubcarriers: 64,
+    ofdmCpLength: 16,
+    ricianKFactor: 1,
+    codingType: 'hamming74',
+    mimoConfig: '2x1-alamouti',
   });
 
   const [notification, setNotification] = useState<string | null>(null);
@@ -27,24 +34,23 @@ export const App: React.FC = () => {
 
   const handleExportPython = () => {
     const code = generatePythonCode(config);
-    navigator.clipboard
-      .writeText(code)
-      .then(() => {
-        setNotification('Python NumPy script copied to clipboard!');
-        setTimeout(() => setNotification(null), 3500);
-      })
-      .catch(() => {
-        // Fallback: download as .py file
-        const blob = new Blob([code], { type: 'text/plain' });
-        const url = URL.createObjectURL(blob);
-        const a = document.createElement('a');
-        a.href = url;
-        a.download = `digicomm_simulation_${config.modulation}.py`;
-        a.click();
-        URL.revokeObjectURL(url);
-        setNotification('Downloaded simulation script!');
+    // Trigger download as digicomm_simulation.py
+    try {
+      const blob = new Blob([code], { type: 'text/x-python' });
+      const url = URL.createObjectURL(blob);
+      const a = document.createElement('a');
+      a.href = url;
+      a.download = 'digicomm_simulation.py';
+      a.click();
+      URL.revokeObjectURL(url);
+      setNotification('Downloaded standalone script: digicomm_simulation.py');
+      setTimeout(() => setNotification(null), 3500);
+    } catch {
+      navigator.clipboard.writeText(code).then(() => {
+        setNotification('Python script copied to clipboard!');
         setTimeout(() => setNotification(null), 3500);
       });
+    }
   };
 
   return (
@@ -71,7 +77,7 @@ export const App: React.FC = () => {
       {/* Top Header */}
       <header
         style={{
-          maxWidth: '1200px',
+          maxWidth: '1280px',
           margin: '0 auto calc(var(--space-base) * 3)',
           display: 'flex',
           justifyContent: 'space-between',
@@ -98,8 +104,7 @@ export const App: React.FC = () => {
               fontSize: '0.95rem',
             }}
           >
-            Digital Communications Simulation Lab • Proakis &amp; Salehi (5th
-            Edition)
+            Interactive Digital Communications Laboratory • Proakis &amp; Salehi (5th Edition)
           </p>
         </div>
 
@@ -123,7 +128,7 @@ export const App: React.FC = () => {
       {notification && (
         <div
           style={{
-            maxWidth: '1200px',
+            maxWidth: '1280px',
             margin: '0 auto 16px',
             backgroundColor: 'oklch(30% 0.15 145)',
             border: '1px solid oklch(50% 0.15 145)',
@@ -141,7 +146,7 @@ export const App: React.FC = () => {
       {error && (
         <div
           style={{
-            maxWidth: '1200px',
+            maxWidth: '1280px',
             margin: '0 auto 16px',
             backgroundColor: 'oklch(30% 0.2 25)',
             border: '1px solid oklch(50% 0.2 25)',
@@ -158,16 +163,22 @@ export const App: React.FC = () => {
       {/* Main Two-Column Layout */}
       <main
         style={{
-          maxWidth: '1200px',
+          maxWidth: '1280px',
           margin: '0 auto',
           display: 'grid',
-          gridTemplateColumns: 'repeat(auto-fit, minmax(320px, 1fr))',
+          gridTemplateColumns: 'minmax(340px, 420px) 1fr',
           gap: 'calc(var(--space-base) * 3)',
           alignItems: 'start',
         }}
       >
-        {/* Left Column: Control Panel */}
-        <section style={{ maxWidth: '420px', width: '100%' }}>
+        {/* Left Column: Control Panel & Theory Panel */}
+        <section
+          style={{
+            display: 'flex',
+            flexDirection: 'column',
+            gap: 'calc(var(--space-base) * 2.5)',
+          }}
+        >
           <ControlPanel
             config={config}
             onChangeConfig={setConfig}
@@ -176,15 +187,15 @@ export const App: React.FC = () => {
             onExportPython={handleExportPython}
             isRunning={isRunning}
           />
+          <TheoryPanel simType={config.simType} />
         </section>
 
-        {/* Right Column: Graphs */}
+        {/* Right Column: Graphs & Diagnostics */}
         <section
           style={{
             display: 'flex',
             flexDirection: 'column',
             gap: 'calc(var(--space-base) * 2.5)',
-            flex: 1,
           }}
         >
           <BerChart result={result} progress={progress} />

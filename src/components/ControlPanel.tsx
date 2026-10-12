@@ -19,6 +19,15 @@ export const ControlPanel: React.FC<ControlPanelProps> = ({
   onExportPython,
   isRunning,
 }) => {
+  const simType = config.simType || 'awgn';
+
+  const handleSimTypeChange = (e: React.ChangeEvent<HTMLSelectElement>) => {
+    onChangeConfig({
+      ...config,
+      simType: e.target.value as SimConfig['simType'],
+    });
+  };
+
   const handleModulationChange = (e: React.ChangeEvent<HTMLSelectElement>) => {
     onChangeConfig({
       ...config,
@@ -78,7 +87,127 @@ export const ControlPanel: React.FC<ControlPanelProps> = ({
         Simulation Parameters
       </h2>
 
-      {/* Modulation Type */}
+      {/* Simulation Type / Channel Mode */}
+      <div style={{ display: 'flex', flexDirection: 'column', gap: '4px' }}>
+        <label
+          htmlFor="simtype-select"
+          style={{ fontSize: '0.85rem', color: 'var(--color-muted)' }}
+        >
+          Communication Scheme
+        </label>
+        <select
+          id="simtype-select"
+          value={simType}
+          disabled={isRunning}
+          onChange={handleSimTypeChange}
+          style={{
+            backgroundColor: 'var(--color-bg)',
+            color: 'var(--color-text)',
+            border: '1px solid var(--color-border)',
+            padding: '8px 12px',
+            borderRadius: '6px',
+            fontSize: '0.95rem',
+            cursor: isRunning ? 'not-allowed' : 'pointer',
+          }}
+        >
+          <option value="awgn">AWGN Channel (Proakis Ch. 5)</option>
+          <option value="rayleigh">Rayleigh Fading (NLOS - Ch. 13)</option>
+          <option value="rician">Rician Fading (LOS + NLOS - Ch. 13)</option>
+          <option value="ofdm">OFDM Multicarrier (IFFT/FFT + CP - Ch. 11)</option>
+          <option value="coded">Channel Coding (Hamming / Conv - Ch. 7)</option>
+          <option value="mimo">MIMO 2×1 Alamouti STBC (Ch. 14)</option>
+        </select>
+      </div>
+
+      {/* Conditional Parameters */}
+      {simType === 'ofdm' && (
+        <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '8px' }}>
+          <div style={{ display: 'flex', flexDirection: 'column', gap: '4px' }}>
+            <label style={{ fontSize: '0.8rem', color: 'var(--color-muted)' }}>Subcarriers (N)</label>
+            <select
+              value={config.ofdmSubcarriers || 64}
+              disabled={isRunning}
+              onChange={(e) => onChangeConfig({ ...config, ofdmSubcarriers: Number(e.target.value) })}
+              style={{
+                backgroundColor: 'var(--color-bg)',
+                color: 'var(--color-text)',
+                border: '1px solid var(--color-border)',
+                padding: '6px',
+                borderRadius: '6px',
+              }}
+            >
+              <option value="32">32</option>
+              <option value="64">64 (Standard)</option>
+              <option value="128">128</option>
+              <option value="256">256</option>
+            </select>
+          </div>
+          <div style={{ display: 'flex', flexDirection: 'column', gap: '4px' }}>
+            <label style={{ fontSize: '0.8rem', color: 'var(--color-muted)' }}>CP Length (Ncp)</label>
+            <select
+              value={config.ofdmCpLength || 16}
+              disabled={isRunning}
+              onChange={(e) => onChangeConfig({ ...config, ofdmCpLength: Number(e.target.value) })}
+              style={{
+                backgroundColor: 'var(--color-bg)',
+                color: 'var(--color-text)',
+                border: '1px solid var(--color-border)',
+                padding: '6px',
+                borderRadius: '6px',
+              }}
+            >
+              <option value="8">8 (1/8 N)</option>
+              <option value="16">16 (1/4 N)</option>
+              <option value="32">32 (1/2 N)</option>
+            </select>
+          </div>
+        </div>
+      )}
+
+      {simType === 'rician' && (
+        <div style={{ display: 'flex', flexDirection: 'column', gap: '4px' }}>
+          <label style={{ fontSize: '0.8rem', color: 'var(--color-muted)' }}>Rician K-Factor (Linear Ratio)</label>
+          <input
+            type="number"
+            min="0"
+            max="50"
+            step="0.5"
+            value={config.ricianKFactor ?? 1}
+            disabled={isRunning}
+            onChange={(e) => onChangeConfig({ ...config, ricianKFactor: Number(e.target.value) })}
+            style={{
+              backgroundColor: 'var(--color-bg)',
+              color: 'var(--color-text)',
+              border: '1px solid var(--color-border)',
+              padding: '6px',
+              borderRadius: '6px',
+            }}
+          />
+        </div>
+      )}
+
+      {simType === 'coded' && (
+        <div style={{ display: 'flex', flexDirection: 'column', gap: '4px' }}>
+          <label style={{ fontSize: '0.8rem', color: 'var(--color-muted)' }}>FEC Code Scheme</label>
+          <select
+            value={config.codingType || 'hamming74'}
+            disabled={isRunning}
+            onChange={(e) => onChangeConfig({ ...config, codingType: e.target.value as any })}
+            style={{
+              backgroundColor: 'var(--color-bg)',
+              color: 'var(--color-text)',
+              border: '1px solid var(--color-border)',
+              padding: '6px',
+              borderRadius: '6px',
+            }}
+          >
+            <option value="hamming74">Hamming(7,4) Systematic Block Code (R=4/7)</option>
+            <option value="conv12k3">Convolutional Code (R=1/2, K=3) + Soft Viterbi</option>
+          </select>
+        </div>
+      )}
+
+      {/* Modulation Type (disabled for coded since BPSK is used as baseline) */}
       <div style={{ display: 'flex', flexDirection: 'column', gap: '4px' }}>
         <label
           htmlFor="mod-select"
@@ -89,7 +218,7 @@ export const ControlPanel: React.FC<ControlPanelProps> = ({
         <select
           id="mod-select"
           value={config.modulation}
-          disabled={isRunning}
+          disabled={isRunning || simType === 'coded'}
           onChange={handleModulationChange}
           style={{
             backgroundColor: 'var(--color-bg)',
@@ -98,7 +227,7 @@ export const ControlPanel: React.FC<ControlPanelProps> = ({
             padding: '8px 12px',
             borderRadius: '6px',
             fontSize: '0.95rem',
-            cursor: isRunning ? 'not-allowed' : 'pointer',
+            cursor: isRunning || simType === 'coded' ? 'not-allowed' : 'pointer',
           }}
         >
           <option value={ModulationType.BPSK}>BPSK (1 bit/symbol)</option>
@@ -216,66 +345,84 @@ export const ControlPanel: React.FC<ControlPanelProps> = ({
             cursor: isRunning ? 'not-allowed' : 'pointer',
           }}
         >
-          <option value={10000}>10,000 (Fast preview)</option>
-          <option value={100000}>100,000 (Standard accuracy)</option>
-          <option value={1000000}>1,000,000 (High statistical validity)</option>
+          <option value="10000">10,000 (Fast Preview)</option>
+          <option value="50000">50,000 (Balanced)</option>
+          <option value="100000">100,000 (Standard Monte Carlo)</option>
+          <option value="500000">500,000 (High Accuracy)</option>
         </select>
       </div>
 
-      {/* Buttons */}
-      <div style={{ display: 'flex', gap: '10px', marginTop: '8px' }}>
+      {/* Action Buttons */}
+      <div
+        style={{
+          display: 'flex',
+          gap: 'calc(var(--space-base) * 1.5)',
+          marginTop: 'calc(var(--space-base) * 1)',
+        }}
+      >
         {!isRunning ? (
           <button
             onClick={onStart}
             style={{
               flex: 1,
               backgroundColor: 'var(--color-accent)',
-              color: '#fff',
-              border: 'none',
-              padding: '10px 16px',
-              borderRadius: '6px',
-              fontSize: '1rem',
+              color: '#000',
               fontWeight: 600,
+              padding: '10px 16px',
+              border: 'none',
+              borderRadius: '6px',
+              fontSize: '0.95rem',
               cursor: 'pointer',
-              transition: 'opacity 0.2s',
+              display: 'flex',
+              alignItems: 'center',
+              justifyContent: 'center',
+              gap: '6px',
             }}
           >
-            Run Simulation
+            <span>▶</span> Run Simulation
           </button>
         ) : (
           <button
             onClick={onStop}
             style={{
               flex: 1,
-              backgroundColor: 'oklch(60% 0.22 25)',
+              backgroundColor: '#ef4444',
               color: '#fff',
-              border: 'none',
-              padding: '10px 16px',
-              borderRadius: '6px',
-              fontSize: '1rem',
               fontWeight: 600,
+              padding: '10px 16px',
+              border: 'none',
+              borderRadius: '6px',
+              fontSize: '0.95rem',
               cursor: 'pointer',
+              display: 'flex',
+              alignItems: 'center',
+              justifyContent: 'center',
+              gap: '6px',
             }}
           >
-            Stop Simulation
+            <span>⏹</span> Stop Engine
           </button>
         )}
 
         <button
           onClick={onExportPython}
-          title="Export runnable Python NumPy script"
+          disabled={isRunning}
+          title="Generate and download standalone Python/NumPy simulation script"
           style={{
             backgroundColor: 'transparent',
             color: 'var(--color-text)',
             border: '1px solid var(--color-border)',
             padding: '10px 14px',
             borderRadius: '6px',
-            fontSize: '0.9rem',
-            cursor: 'pointer',
-            fontWeight: 500,
+            fontSize: '0.95rem',
+            cursor: isRunning ? 'not-allowed' : 'pointer',
+            opacity: isRunning ? 0.5 : 1,
+            display: 'flex',
+            alignItems: 'center',
+            gap: '6px',
           }}
         >
-          Export Python
+          <span>🐍</span> Export Python
         </button>
       </div>
     </div>
