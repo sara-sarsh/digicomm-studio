@@ -6,10 +6,8 @@ import {
   ofdmModulate,
   ofdmDemodulate,
   computePapr,
-  computeSpectrum,
 } from '../src/core/ofdm';
 import { Xoshiro128Plus } from '../src/core/prng';
-import { addAwgn } from '../src/core/channel';
 
 describe('OFDM Core Module', () => {
   it('IFFT then FFT recovers original signal (tolerance 1e-9 per sample)', () => {
